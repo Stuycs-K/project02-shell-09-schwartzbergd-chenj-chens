@@ -13,12 +13,19 @@ int main(int argc, char* argv[]) {
 	char* input = get_input();
 	printf("string you entered (parse later): %s\n", input);
 
-	char* arg_array[ARRAY_SIZE];
-	split(input, arg_array, " ");
+	char* cmd_array[ARRAY_SIZE];
+	split(input, cmd_array, ";"); // first split over the semicolons
 
-	for (int i = 0; arg_array[i+1] != NULL; ++i) {
-		printf("%d: %s\n", i, arg_array[i]);
+	char* arg_array[ARRAY_SIZE];
+	for (int i = 0; cmd_array[i+1] != NULL; ++i) {
+		split(cmd_array[i], arg_array, " "); // then split over spaces
+		for (int j = 0; arg_array[j+1] != NULL; ++j) {
+			printf("%d: %s\n", j, arg_array[j]);
+		}
 	}
+	//
+	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];
+	// split_space(line_buffer, args_array);
 
 	// execvp(args_array[0], args_array);
 	//
