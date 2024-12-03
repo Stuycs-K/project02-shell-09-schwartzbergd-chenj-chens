@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-// test
-int func(int num);
+char* get_input();
+void split_space(char* string, char** arg_ary);
 
 #endif
