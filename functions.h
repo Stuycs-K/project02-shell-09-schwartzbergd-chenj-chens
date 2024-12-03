@@ -3,5 +3,6 @@
 
 // test
 int func(int num);
+char[][] scSplit(char[] arr);
 
 #endif
