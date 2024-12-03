@@ -2,6 +2,6 @@
 #define FUNCTIONS_H
 
 // test
-int func(int num);
+char * getdir();
 
 #endif

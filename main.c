@@ -10,11 +10,14 @@
 #define LINE_BUFFER_SIZE 256
 
 int main(int argc, char* argv[]) {
-	printf("Enter command: ");
+	printf("%s $ ",getdir());
+	// printf("Enter command: ");
 	fflush(stdin);
 	char line_buffer[LINE_BUFFER_SIZE];
 	fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
-	printf("string you entered (parse later): %s\n", line_buffer);
 
+	if (strcmp(line_buffer, "exit\n")) {
+		printf("string you entered (parse later): %s\n", line_buffer);
+	}
 	return 0;
 }
