@@ -2,6 +2,6 @@
 #define FUNCTIONS_H
 
 char* get_input();
-void split_space(char* string, char** arg_array);
+void split(char* string, char** arg_array);
 
 #endif

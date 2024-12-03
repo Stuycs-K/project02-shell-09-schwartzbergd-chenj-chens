@@ -18,13 +18,13 @@ char* get_input() {
 }
 
 /*
-split_space: takes a string and splits over spaces, returns the array of the strings
+split: takes a string and splits over the delimiters, returns the array of the strings
 */
 
-void split_space(char* string, char** arg_array) {
+void split(char* string, char** arg_array, char* delimiters) {
   char* token;
   int i;
-  while ((token = strsep(&string, " ")) != NULL) {
+  while ((token = strsep(&string, delimiters)) != NULL) {
     arg_array[i] = token;
     i++;
   }
