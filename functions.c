@@ -6,6 +6,7 @@
 #include <fcntl.h>
 
 #define LINE_BUFFER_SIZE 256
+#define ARRAY_SIZE 16
 
 char* get_input() {
   printf("Enter command: ");
@@ -17,16 +18,15 @@ char* get_input() {
 }
 
 /*
-split_space: takes a string and splits over spaces, putting the split strings into arg_ary
-returns the array of
+split_space: takes a string and splits over spaces, returns the array of the strings
 */
 
-void split_space(char* string, char** arg_ary) {
+void split_space(char* string, char** arg_array) {
   char* token;
   int i;
   while ((token = strsep(&string, " ")) != NULL) {
-    arg_ary[i] = token;
+    arg_array[i] = token;
     i++;
   }
-  arg_ary[i] = NULL;
+  arg_array[i] = NULL;
 }
