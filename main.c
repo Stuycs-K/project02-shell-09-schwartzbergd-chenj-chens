@@ -12,15 +12,22 @@ int main(int argc, char* argv[]) {
 	printf("string you entered (parse later): %s\n", input);
 
 	char** cmd_array = split(input, ";"); // first split over the semicolons
+	
+	char** arg_array;
 
 	printf("size %d\n", ARRAY_SIZE);
-	for (int i = 0; cmd_array[i+1] != NULL; ++i) {
+	int i =0;
+	do {
 		printf("arg %d: %s\n", i, cmd_array[i]);
-		// split(cmd_array[i], arg_array, " "); // then split over spaces
-		// for (int j = 0; arg_array[j+1] != NULL; ++j) {
-		// 	printf("%d: %s\n", j, arg_array[j]);
-		// }
-	}
+		arg_array = split(cmd_array[i], " "); // then split over spaces
+		int j = 0;
+		do {
+			printf(" - subarg %d: %s\n", j, arg_array[j]);
+			j++;
+		} while(arg_array[j]!=NULL);
+		printf("\n");
+		i++;
+	} while(cmd_array[i]!=NULL);
 	//
 	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];
 	// split_space(line_buffer, args_array);
