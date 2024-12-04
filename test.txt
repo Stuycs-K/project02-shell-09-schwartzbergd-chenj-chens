@@ -1,3 +1,1 @@
-line 1 of test.txt
-line 2 of test.txt
-line 3
+cat foo.txt;mkdir apple;touch file.txt

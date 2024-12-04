@@ -19,7 +19,10 @@ int main(int argc, char* argv[]) {
 	// fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
 	// printf("string 2 you entered (parse later): %s\n", line_buffer);
 
+	redirstdin("test.txt");
 	char* input = get_input();
+	printf("\n");
+	redir("foo.txt");
 	printf("string you entered (parse later): %s\n", input);
 
 	char** cmd_array = split(input, ";"); // first split over the semicolons
@@ -39,6 +42,7 @@ int main(int argc, char* argv[]) {
 		printf("\n");
 		i++;
 	} while(cmd_array[i]!=NULL);
+
 	//
 	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];
 	// split_space(line_buffer, args_array);
