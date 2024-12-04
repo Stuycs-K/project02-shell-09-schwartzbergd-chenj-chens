@@ -14,7 +14,9 @@ int main(int argc, char* argv[]) {
 	fflush(stdin);
 	char line_buffer[LINE_BUFFER_SIZE];
 	fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
+	redir("foo.txt");
 	printf("string you entered (parse later): %s\n", line_buffer);
+
 
 	return 0;
 }

@@ -3,6 +3,7 @@
 
 // test
 int func(int num);
-// char[][] scSplit(char[] arr);
+int err();
+void redir(char * fileName);
 
 #endif
