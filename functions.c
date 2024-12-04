@@ -41,6 +41,7 @@ int err(){
 
 // takes file name as argument, redirects stdout to that file
 void redir(char * fileName){
+  // maybe flush before?
   int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0644);
   int FILENO = STDOUT_FILENO;
   if (fd1<0) err();
@@ -49,10 +50,19 @@ void redir(char * fileName){
 }
 
 // takes file name as argument, redirects stdin from that file
-void redirstdin(char * fileName){ // not working-- file also becomes empty
+void redirstdin(char * fileName){
   int fd1 = open(fileName, O_RDONLY); // not sure if file should be created if it doesn't exist
   int FILENO = STDIN_FILENO;
   if (fd1<0) err();
   dup2(fd1, FILENO);
   close(fd1);
+}
+
+// creates temp file, redirects stdout to temp and redirects stdin to temp
+void pipe(){
+  int temp = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+  if (temp<0) err();
+  redir(temp);
+  redirstdin(temp);
+  if (remove(temp)<0) err();
 }
