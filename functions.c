@@ -13,6 +13,12 @@ char* get_input() {
     return NULL;
   }
   line_buffer[BUFFER_SIZE-1] = '\0';
+
+  int newline_check = strlen(line_buffer) - 1;
+  if (line_buffer[newline_check] == '\n') {
+    line_buffer[newline_check] = '\0';
+  }
+
   return line_buffer;
 }
 
