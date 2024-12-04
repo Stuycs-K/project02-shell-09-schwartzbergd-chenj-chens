@@ -8,35 +8,37 @@
 #include "functions.h"
 
 int main(int argc, char* argv[]) {
-	char* input = get_input();
-	printf("string you entered (parse later): %s\n", input);
-
-	char** cmd_array = split(input, ";"); // first split over the semicolons
-	
+	char* input;
+	char** cmd_array;
 	char** arg_array;
 
-	printf("size %d\n", ARRAY_SIZE);
-	int i =0;
-	do {
-		printf("arg %d: %s\n", i, cmd_array[i]);
-		arg_array = split(cmd_array[i], " "); // then split over spaces
-		int j = 0;
+	int iters = 0;
+	while (1) {
+		printf("iters: %d, command line! enter command: ", iters); // remove this later to be just $
+		fflush(stdout);
+		input = get_input(); // will wait until enter
+		if (input == NULL) {
+			printf("exiting\n");
+			exit(0);
+		}
+		cmd_array = split(input, ";"); // first split over the semicolons
+		int i =0;
 		do {
-			printf(" - subarg %d: %s\n", j, arg_array[j]);
-			j++;
-		} while(arg_array[j]!=NULL);
-		printf("\n");
-		i++;
-	} while(cmd_array[i]!=NULL);
-	//
-	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];
-	// split_space(line_buffer, args_array);
+			printf("arg %d: %s\n", i, cmd_array[i]);
+			arg_array = split(cmd_array[i], " "); // then split over spaces
+			int j = 0;
+			do {
+				printf(" - subarg %d: %s\n", j, arg_array[j]);
+				j++;
+			} while(arg_array[j]!=NULL);
 
-	// execvp(args_array[0], args_array);
-	//
-	// printf("failed\n");
-	// have to split over semicolons
-	// treat each semicolon split line as an individia
+			free(arg_array);
+			printf("\n");
+			i++;
+		} while(cmd_array[i]!=NULL);
 
-	return 0;
+		free(input);
+
+		iters++;
+	}
 }

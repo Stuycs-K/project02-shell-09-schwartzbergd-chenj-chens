@@ -8,11 +8,11 @@
 #include "functions.h"
 
 char* get_input() {
-  printf("Enter command: ");
-  fflush(stdin);
   char* line_buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
-  fgets(line_buffer, BUFFER_SIZE-1, stdin); line_buffer[BUFFER_SIZE-1] = '\0';
-
+  if (fgets(line_buffer, BUFFER_SIZE-1, stdin) == NULL) {
+    return NULL;
+  }
+  line_buffer[BUFFER_SIZE-1] = '\0';
   return line_buffer;
 }
 
@@ -28,6 +28,6 @@ char** split(char* string, char* delimiters) {
     arg_array[i] = token;
   }
   arg_array[i] = NULL;
-	
+
 	return arg_array;
 }
