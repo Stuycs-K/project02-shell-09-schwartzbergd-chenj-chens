@@ -7,6 +7,9 @@
 
 #include "functions.h"
 
+/* get_input(): mallocs a string and fgets until stdin newline and returns the string (without newline)
+*/
+
 char* get_input() {
   char* line_buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
   if (fgets(line_buffer, BUFFER_SIZE-1, stdin) == NULL) {
@@ -34,6 +37,7 @@ char** split(char* string, char* delimiters) {
     arg_array[i] = token;
   }
   arg_array[i] = NULL;
+  arg_array[ARRAY_SIZE-1] = NULL;
 
 	return arg_array;
 }

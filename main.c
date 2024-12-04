@@ -7,7 +7,17 @@
 
 #include "functions.h"
 
+// just for testing, no real functionality
+void printArr(char** arr) {
+	int j = 0;
+	do {
+		printf("arg %d: '%s'\n", j, arr[j]);
+		j++;
+	} while(arr[j]!=NULL);
+}
+
 int main(int argc, char* argv[]) {
+	int forkpid;
 	char* input;
 	char** cmd_array;
 	char** arg_array;
@@ -22,15 +32,27 @@ int main(int argc, char* argv[]) {
 			exit(0);
 		}
 		cmd_array = split(input, ";"); // first split over the semicolons
-		int i =0;
+		int i = 0;
 		do {
-			printf("arg %d: %s\n", i, cmd_array[i]);
+			// printf("arg %d: '%s'\n", i, cmd_array[i]);
 			arg_array = split(cmd_array[i], " "); // then split over spaces
-			int j = 0;
-			do {
-				printf(" - subarg %d: %s\n", j, arg_array[j]);
-				j++;
-			} while(arg_array[j]!=NULL);
+			printArr(arg_array);
+
+			forkpid = fork();
+			if (forkpid == -1) {
+				perror("Failed to fork");
+				return -1;
+			} else if (forkpid == 0) {
+				printf("child here %d!\n", getpid());
+
+				return 0;
+			} else {
+				printf("parent here %d!\n", getpid());
+				printf("child pid: %d\n", forkpid);
+
+				int status;
+				waitpid(forkpid, status, 0);
+			}
 
 			free(arg_array);
 			printf("\n");
@@ -41,4 +63,7 @@ int main(int argc, char* argv[]) {
 
 		iters++;
 	}
+
+	printf("how did you get here?\n");
+	return 1;
 }
