@@ -20,9 +20,8 @@ int err(){
 
 // takes file name as argument, redirects stdout to that file
 void redir(char * fileName){
-  int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0611);
+  int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0644);
   int FILENO = STDOUT_FILENO;
-  // int backup_stdout = dup(FILENO);
   if (fd1<0) err();
   dup2(fd1, FILENO);
   close(fd1);
@@ -30,10 +29,9 @@ void redir(char * fileName){
 
 // takes file name as argument, redirects stdin from that file
 void redirstdin(char * fileName){ // not working-- file also becomes empty
-  int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0611); // not sure if file should be created if it doesn't exist
+  int fd1 = open(fileName, O_RDONLY); // not sure if file should be created if it doesn't exist
   int FILENO = STDIN_FILENO;
-  // printf("%d\n", FILENO);
   if (fd1<0) err();
-  dup2(FILENO, fd1);
+  dup2(fd1, FILENO);
   close(fd1);
 }
