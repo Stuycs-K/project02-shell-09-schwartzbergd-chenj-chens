@@ -7,21 +7,19 @@
 
 #include "functions.h"
 
-#define ARRAY_SIZE 16
-
 int main(int argc, char* argv[]) {
 	char* input = get_input();
 	printf("string you entered (parse later): %s\n", input);
 
-	char* cmd_array[ARRAY_SIZE];
-	split(input, cmd_array, ";"); // first split over the semicolons
+	char** cmd_array = split(input, ";"); // first split over the semicolons
 
-	char* arg_array[ARRAY_SIZE];
+	printf("size %d\n", ARRAY_SIZE);
 	for (int i = 0; cmd_array[i+1] != NULL; ++i) {
-		split(cmd_array[i], arg_array, " "); // then split over spaces
-		for (int j = 0; arg_array[j+1] != NULL; ++j) {
-			printf("%d: %s\n", j, arg_array[j]);
-		}
+		printf("arg %d: %s\n", i, cmd_array[i]);
+		// split(cmd_array[i], arg_array, " "); // then split over spaces
+		// for (int j = 0; arg_array[j+1] != NULL; ++j) {
+		// 	printf("%d: %s\n", j, arg_array[j]);
+		// }
 	}
 	//
 	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];

@@ -1,7 +1,10 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#define BUFFER_SIZE 256
+#define ARRAY_SIZE 16
+
 char* get_input();
-void split(char* string, char** arg_array, char* delimiters);
+char** split(char* string, char* delimiters);
 
 #endif
