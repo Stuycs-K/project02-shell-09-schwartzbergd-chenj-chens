@@ -1,1 +1,3 @@
-this text is from the file test.txt
+line 1 of test.txt
+line 2 of test.txt
+line 3
