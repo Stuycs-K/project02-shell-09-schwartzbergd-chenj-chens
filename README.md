@@ -1,2 +1,20 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Tfg6waJb)
+
 # Systems Project2 - MyShell
+
+## (funny pun here): David Schwartzberg, Jialan Chen, Stacey Chen
+
+### Features
+- basic requirements: splits input over semicolons, then over spaces, then execvp()s the args
+- j
+
+### Unfinished Features
+- something here probably
+
+### Bugs
+- Bugs
+
+### Functions
+- char* get_input()
+- char** split(char* string, char* delimiters)
+- other functions here
