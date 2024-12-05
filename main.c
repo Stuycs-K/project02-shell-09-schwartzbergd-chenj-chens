@@ -48,14 +48,14 @@ int main(int argc, char* argv[]) {
 				perror("Failed to fork");
 				return -1;
 			} else if (forkpid == 0) {
-				printf("child here %d!\n", getpid());
+				// printf("child here %d!\n", getpid());
 				execvp(arg_array[0], arg_array);
 				printf("failed to exec command %s\n", arg_array[0]);
 
 				return 0;
 			} else {
-				printf("parent here %d!\n", getpid());
-				printf("child pid: %d\n", forkpid);
+				// printf("parent here %d!\n", getpid());
+				// printf("child pid: %d\n", forkpid);
 
 				int status;
 				waitpid(forkpid, &status, 0);
