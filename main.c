@@ -21,7 +21,6 @@ int main(int argc, char* argv[]) {
 
 	redirstdin("test.txt");
 	char* input = get_input();
-	printf("\n");
 	redir("foo.txt");
 	printf("string you entered (parse later): %s\n", input);
 
@@ -43,15 +42,14 @@ int main(int argc, char* argv[]) {
 		i++;
 	} while(cmd_array[i]!=NULL);
 
-	//
-	// char args_array[ARGS_ARRAY_SIZE][LINE_BUFFER_SIZE];
-	// split_space(line_buffer, args_array);
+	// testing piper()
+	// char line[] = "ls -l -h";
+	// char ** args = split( line, " " );
+	// piper();
+	// execvp(args[0], args);
+	// char* inp = get_input();
+	// printf("%seee\n", inp);
 
-	// execvp(args_array[0], args_array);
-	//
-	// printf("failed\n");
-	// have to split over semicolons
-	// treat each semicolon split line as an individia
 
 	return 0;
 }

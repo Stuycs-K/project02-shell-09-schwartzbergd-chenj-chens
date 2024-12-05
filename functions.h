@@ -9,5 +9,6 @@ void redir(char * fileName);
 void redirstdin(char * fileName);
 char* get_input();
 char** split(char* string, char* delimiters);
+void piper();
 
 #endif
