@@ -9,12 +9,12 @@ char * getdir() {
   char * cwd;
   int s = sizeof(char) * 1024;
   cwd = (char *)malloc(s);
+//  long l = strlen(getenv("HOME"))
   if (getcwd(cwd, s)==NULL){
     printf("Error: %s\n", strerror(errno));
   }
   return cwd;
 }
-
 
 char* get_input() {
   int BUFFER_SIZE = 256;
@@ -24,19 +24,3 @@ char* get_input() {
   fgets(line_buffer, BUFFER_SIZE-1, stdin); line_buffer[BUFFER_SIZE-1] = '\0';
   return line_buffer;
 }
-
-/*
-split: takes a string and splits over the delimiters, returns the array of the strings
-*/
-
-//char** split(char* string, char* delimiters) {
-//	char** arg_array = (char**) malloc(ARRAY_SIZE * sizeof(char*));
-//  // char* token;
-//	int i = 0;
-//	for (char* token; i < ARRAY_SIZE && (token = strsep(&string, delimiters)) != NULL; i++) {
-//    arg_array[i] = token;
-//  }
-//  arg_array[i] = NULL;
-//
-//	return arg_array;
-//}

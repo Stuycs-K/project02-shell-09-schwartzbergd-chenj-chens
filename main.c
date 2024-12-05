@@ -11,7 +11,7 @@
 
  int main(int argc, char* argv[]) {
     char * n;
-    // printf("HOME: %s\n", getenv("HOME"));
+    printf("HOME: %s\n", getenv("HOME"));
     while(n=get_input()) {
         if (strcmp(n, "exit\n")==0 || strcmp(n, "\n")==0) {
             exit(1);
