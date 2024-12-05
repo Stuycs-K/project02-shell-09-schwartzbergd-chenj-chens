@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 #include "functions.h"
 
@@ -44,6 +45,7 @@ int main(int argc, char* argv[]) {
 				return -1;
 			} else if (forkpid == 0) {
 				printf("child here %d!\n", getpid());
+				execvp(arg_array[0], arg_array);
 
 				return 0;
 			} else {
@@ -51,7 +53,8 @@ int main(int argc, char* argv[]) {
 				printf("child pid: %d\n", forkpid);
 
 				int status;
-				waitpid(forkpid, status, 0);
+				waitpid(forkpid, &status, 0);
+				printf("child exited\n");
 			}
 
 			free(arg_array);
