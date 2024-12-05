@@ -8,20 +8,23 @@
 #include "functions.h"
 
 int main(int argc, char* argv[]) {
-	// my tests
+	int stdout = STDOUT_FILENO;
+	int stdin = STDIN_FILENO;
+	int backup_stdout = dup(stdout);
+	int backup_stdin = dup(stdin);
 	// printf("Enter command: ");
 	// fflush(stdin);
 	// char line_buffer[LINE_BUFFER_SIZE];
 	// redirstdin("test.txt");
 	// fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
-	// redir("foo.txt");
+	// redirstdout("foo.txt");
 	// printf("string you entered (parse later): %s\n", line_buffer);
 	// fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
 	// printf("string 2 you entered (parse later): %s\n", line_buffer);
 
 	redirstdin("test.txt");
 	char* input = get_input();
-	redir("foo.txt");
+	redirstdout("foo.txt");
 	printf("string you entered (parse later): %s\n", input);
 
 	char** cmd_array = split(input, ";"); // first split over the semicolons

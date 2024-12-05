@@ -5,8 +5,9 @@
 #define ARRAY_SIZE 16
 
 int err();
-void redir(char * fileName);
+void redirstdout(char * fileName);
 void redirstdin(char * fileName);
+void redir(char** arr);
 char* get_input();
 char** split(char* string, char* delimiters);
 void piper();
