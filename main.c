@@ -37,6 +37,10 @@ int main(int argc, char* argv[]) {
 		do {
 			// printf("arg %d: '%s'\n", i, cmd_array[i]);
 			arg_array = split(cmd_array[i], " "); // then split over spaces
+			if (strcmp(arg_array[0], "exit") == 0) {
+				printf("exiting MAIN program\n");
+				exit(0);
+			}
 			printArr(arg_array);
 
 			forkpid = fork();
@@ -46,6 +50,7 @@ int main(int argc, char* argv[]) {
 			} else if (forkpid == 0) {
 				printf("child here %d!\n", getpid());
 				execvp(arg_array[0], arg_array);
+				printf("failed to exec command %s\n", arg_array[0]);
 
 				return 0;
 			} else {
