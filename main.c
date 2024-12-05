@@ -45,6 +45,9 @@ int main(int argc, char* argv[]) {
 		i++;
 	} while(cmd_array[i]!=NULL);
 
+	char** test_array;
+	// redir(test_array);
+
 	// testing piper()
 	// char line[] = "ls -l -h";
 	// char ** args = split( line, " " );

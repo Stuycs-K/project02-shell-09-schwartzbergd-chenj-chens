@@ -1,1 +1,1 @@
-cat foo.txt;mkdir apple;touch file.txt
+cat test.txt > foo.txt;mkdir apple;touch file.txt
