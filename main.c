@@ -18,16 +18,19 @@ void printArr(char** arr) {
 }
 
 int main(int argc, char* argv[]) {
+	int backup_stdout = dup(STDOUT_FILENO);
+	int backup_stdin = dup(STDIN_FILENO);
 	char* cwd;
 	char* input;
 	char** cmd_array;
 	char** arg_array;
 	char error_string[BUFFER_SIZE];
 
+
 	while (1) {
 		cwd = getdir(); // needs to be changed for "cd" commands
 		printf("%s$ ", cwd);
-		
+
     input = get_input();
 
     cmd_array = split(input, ";"); // split over the semicolons
@@ -37,19 +40,19 @@ int main(int argc, char* argv[]) {
 				printf("exiting...\n"); // remove in final, keep for testing maybe
 				return 0;
 			}
-			
+
 	    arg_array = split(cmd_array[i], " "); // then split over spaces
-			
+
 			// cd check
 			if (strcmp(arg_array[0], "cd") == 0) {
 				int success = chdir(arg_array[1]);
 				if (success == 0) {
-					
+
 				} else if (success == -1) {
 					sprintf(error_string, "%s", arg_array[1]);
 					perror(error_string);
 				}
-				
+
 				continue; // required to make sure cd isn't tried to be execvp()ed
 			}
 
@@ -58,12 +61,13 @@ int main(int argc, char* argv[]) {
 		    perror("Failed to fork");
 		    return 1;
 	    } else if (forkpid == 0) {
+				redir(arg_array);
 		    execvp(arg_array[0], arg_array);
-					
+
 				// only reaches here if execvp fails
 				sprintf(error_string, "%s", arg_array[0]);
 				perror(error_string);
-				
+
 				return 1;
 	    } else {
 		    int status;
@@ -75,7 +79,7 @@ int main(int argc, char* argv[]) {
 
 		free(input);
   }
-	
+
 	printf("??? You shouldn't be here, probably\n");
 	return 1;
 }

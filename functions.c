@@ -43,7 +43,7 @@ char* get_input() {
 // splits a string into substrings over delimiters (usually ; or space)
 // - char* string: the string to be split on
 // - char* delimiters: the (possibly multiple) delimiters that will be passed into strsep
-// returns a char** array with max size ARRAY_SIZE, containing the split strings without the delimiters; 
+// returns a char** array with max size ARRAY_SIZE, containing the split strings without the delimiters;
 // the index after the last string will be NULL
 char** split(char* string, char* delimiters) {
 	char** arg_array = (char**) malloc(ARRAY_SIZE * sizeof(char*));
@@ -84,15 +84,24 @@ void redirstdin(char * fileName){
   close(fd1);
 }
 
-// redir(char** arr): takes an array (command array after parsing spaces), and redirects appropriately based on symbol
+// redir(char** arr): takes a char* array (command array after parsing spaces), checks if a symbol exists and redirects appropriately
+// 
 void redir(char** arr){
   int size = 0;
+  int endOfArg = 0;
   while (arr[size]!=NULL) size++;
-  if (!strcmp(arr[size-2], "<")){
-    redirstdin(arr[size-1]);
-  }
-  if (!strcmp(arr[size-2], ">")){
-    redirstdout(arr[size-1]);
+  if (size<3) return;
+  if (!strcmp(arr[size-2], "<") || !strcmp(arr[size-2], ">")){
+    if (!strcmp(arr[size-2], "<")){
+      redirstdin(arr[size-1]);
+      endOfArg = size-2;
+    }
+    else if (!strcmp(arr[size-2], ">")){
+      redirstdout(arr[size-1]);
+      endOfArg = size-2;
+    }
+    arr[endOfArg] = NULL;
+    execvp(arr[0], arr);
   }
 }
 
