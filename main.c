@@ -8,6 +8,8 @@
 
 #include "functions.h"
 
+#define EOF_CHAR 0x04
+
 // just for testing, no real functionality
 void printArr(char** arr) {
 	int j = 0;
@@ -18,8 +20,8 @@ void printArr(char** arr) {
 }
 
 int main(int argc, char* argv[]) {
-	int backup_stdout = dup(STDOUT_FILENO);
-	int backup_stdin = dup(STDIN_FILENO);
+	// int backup_stdout = dup(STDOUT_FILENO);
+	// int backup_stdin = dup(STDIN_FILENO);
 	char* cwd;
 	char* input;
 	char** cmd_array;
@@ -32,9 +34,14 @@ int main(int argc, char* argv[]) {
 		printf("%s$ ", cwd);
 
     input = get_input();
+		if (input == NULL) { // doesn't exactly work for some reason, prints command line when doing ./shell < stdin.txt
+			printf("EOF, exiting\n");
+			return 0;
+		}
 
     cmd_array = split(input, ";"); // split over the semicolons
 		for (int i = 0; cmd_array[i] != NULL; i++) {
+			// printf("char 1: %c %d\n", cmd_array[i][0] ,(int)cmd_array[i][0]);
 			// exit check
 			if (strcmp(cmd_array[i], "exit") == 0) {
 				printf("exiting...\n"); // remove in final, keep for testing maybe
@@ -62,6 +69,11 @@ int main(int argc, char* argv[]) {
 		    return 1;
 	    } else if (forkpid == 0) {
 				redir(arg_array);
+				// HANDLE REDIRECTION / PIPING HERE
+				// "< would go after the first command only,
+				// > would go at the end of the command only.
+				// e.g. a < c.txt | b  > d.txt "
+
 		    execvp(arg_array[0], arg_array);
 
 				// only reaches here if execvp fails
