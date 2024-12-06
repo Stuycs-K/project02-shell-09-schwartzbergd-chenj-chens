@@ -8,9 +8,12 @@
 #define BUFFER_SIZE 256
 #define ARRAY_SIZE 16
 
+// gets the string of the cwd (current working directory)
+// - no parameters
+// returns a string
 char * getdir() {
   char * cwd;
-  int s = sizeof(char) * 1024;
+	int s = sizeof(char) * BUFFER_SIZE;
   cwd = (char *)malloc(s);
 //  long l = strlen(getenv("HOME"))
   if (getcwd(cwd, s)==NULL){
@@ -19,9 +22,9 @@ char * getdir() {
   return cwd;
 }
 
-/* get_input(): mallocs a string and fgets until stdin newline and returns the string (without newline)
-*/
-
+// waits for input from stdin using fgets
+// - no parameters
+// returns a string with newline removed
 char* get_input() {
   char* line_buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
   if (fgets(line_buffer, BUFFER_SIZE-1, stdin) == NULL) {
@@ -37,29 +40,19 @@ char* get_input() {
   return line_buffer;
 }
 
-//old
-//char* get_input() {
-//  int BUFFER_SIZE = 256;
-//  printf("%s $ ",getdir());
-//  fflush(stdin);
-//  char* line_buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
-//  fgets(line_buffer, BUFFER_SIZE-1, stdin); line_buffer[BUFFER_SIZE-1] = '\0';
-//  return line_buffer;
-//}
-
-/*
-split: takes a string and splits over the delimiters, returns the array of the strings
-*/
-
+// splits a string into substrings over delimiters (usually ; or space)
+// - char* string: the string to be split on
+// - char* delimiters: the (possibly multiple) delimiters that will be passed into strsep
+// returns a char** array with max size ARRAY_SIZE, containing the split strings without the delimiters; 
+// the index after the last string will be NULL
 char** split(char* string, char* delimiters) {
 	char** arg_array = (char**) malloc(ARRAY_SIZE * sizeof(char*));
-  // char* token;
 	int i = 0;
 	for (char* token; i < ARRAY_SIZE && (token = strsep(&string, delimiters)) != NULL; i++) {
     arg_array[i] = token;
   }
   arg_array[i] = NULL;
-  arg_array[ARRAY_SIZE-1] = NULL;
+	arg_array[ARRAY_SIZE-1] = NULL; // safety NULL
 
 	return arg_array;
 }
