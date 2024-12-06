@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
 			// cd check
 			if (strcmp(arg_array[0], "cd") == 0) {
-				int success = chdir(arg_array[1]);
+				int success = chdir_wrapper(arg_array[1]);
 				if (success == 0) {
 
 				} else if (success == -1) {

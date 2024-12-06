@@ -40,6 +40,14 @@ char* get_input() {
   return line_buffer;
 }
 
+int chdir_wrapper(char* newdir) {
+	if (newdir == NULL) {
+		return chdir(getenv("HOME"));
+	} else {
+		return chdir(newdir);
+	}
+}
+
 // splits a string into substrings over delimiters (usually ; or space)
 // - char* string: the string to be split on
 // - char* delimiters: the (possibly multiple) delimiters that will be passed into strsep
