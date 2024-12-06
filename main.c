@@ -22,29 +22,28 @@ int main(int argc, char* argv[]) {
 	char* input;
 	char** cmd_array;
 	char** arg_array;
-	int forkpid;
 
-	int iters = 0;
 	while (1) {
 		cwd = getdir(); // needs to be changed for "cd" commands
 		printf("%s$ ", cwd);
 		
     input = get_input();
-		if (strcmp(input, "exit") == 0) {
-			printf("exiting...\n"); // remove in final, keep for testing maybe
-			exit(0);
-    }
-		
-    cmd_array = split(input, ";"); // split over the semicolons
-		for (int i = 0; cmd_array[i]!=NULL; i++) {
-			// printf("arg %d: '%s'\n", i, cmd_array[i]);
-	    arg_array = split(cmd_array[i], " "); // then split over spaces
-	    printArr(arg_array);
 
-	    forkpid = fork();
+    cmd_array = split(input, ";"); // split over the semicolons
+		for (int i = 0; cmd_array[i] != NULL; i++) {
+			printf("%d: '%s'\n", i , cmd_array[i]);
+			// exit check
+			if (strcmp(cmd_array[i], "exit") == 0) {
+				printf("exiting...\n"); // remove in final, keep for testing maybe
+				return 0;
+			}
+			
+	    arg_array = split(cmd_array[i], " "); // then split over spaces
+
+			int forkpid = fork();
 	    if (forkpid == -1) {
 		    perror("Failed to fork");
-		    return -1;
+		    return 1;
 	    } else if (forkpid == 0) {
 		    execvp(arg_array[0], arg_array);
 					
@@ -64,10 +63,9 @@ int main(int argc, char* argv[]) {
 	    printf("\n");
 		}
 
-    free(input);
-
-		iters++; // not needed technically
+		free(input);
   }
-	printf("how did you get here?\n");
+	
+	printf("??? You shouldn't be here, probably\n");
 	return 1;
 }
