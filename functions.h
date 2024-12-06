@@ -7,5 +7,11 @@
 char * getdir();
 char * get_input();
 char ** split(char* string, char* delimiters);
-#endif
 
+int err();
+void redirstdout(char * fileName);
+void redirstdin(char * fileName);
+void redir(char** arr);
+void piper();
+
+#endif

@@ -56,3 +56,51 @@ char** split(char* string, char* delimiters) {
 
 	return arg_array;
 }
+
+// err(): prints errno
+int err(){
+    printf("errno %d\n",errno);
+    printf("%s\n",strerror(errno));
+    exit(1);
+}
+
+// redirstdout(char * fileName): takes file name as argument, redirects stdout to that file using dup2
+void redirstdout(char * fileName){
+  fflush(stdout);
+  int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+  int FILENO = STDOUT_FILENO;
+  if (fd1<0) err();
+  dup2(fd1, FILENO);
+  close(fd1);
+}
+
+// redirstdin(char * filename): takes file name as argument, redirects stdin to that file using dup2
+void redirstdin(char * fileName){
+  fflush(stdin);
+  int fd1 = open(fileName, O_RDONLY);
+  int FILENO = STDIN_FILENO;
+  if (fd1<0) err();
+  dup2(fd1, FILENO);
+  close(fd1);
+}
+
+// redir(char** arr): takes an array (command array after parsing spaces), and redirects appropriately based on symbol
+void redir(char** arr){
+  int size = 0;
+  while (arr[size]!=NULL) size++;
+  if (!strcmp(arr[size-2], "<")){
+    redirstdin(arr[size-1]);
+  }
+  if (!strcmp(arr[size-2], ">")){
+    redirstdout(arr[size-1]);
+  }
+}
+
+// pipe(): redirects stdout to temp and redirects stdin to temp, (haven't done) removes temp file after
+void piper(){
+//  int backup_stdout = dup(STDOUT_FILENO);
+  redirstdout("temp.txt");
+//  dup2(backup_stdout, STDOUT_FILENO); // set stdout entry to original
+  redirstdin("temp.txt");
+  //if (remove("temp.txt")<0) err();
+}
