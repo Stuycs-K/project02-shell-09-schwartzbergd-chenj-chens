@@ -22,10 +22,14 @@ int main(int argc, char* argv[]) {
 	char* input;
 	char** cmd_array;
 	char** arg_array;
+	int stdout = STDOUT_FILENO;
+	int stdin = STDIN_FILENO;
+	int backup_stdout = dup(stdout);
+	int backup_stdin = dup(stdin);
 
 	int iters = 0;
 //	while (1) {
-            
+
         //printf("HOME: %s\n", getenv("HOME"));
 		//printf("iters: %d, command line! enter command: ", iters); // remove this later to be just $
 		//fflush(stdout);
@@ -50,7 +54,6 @@ int main(int argc, char* argv[]) {
 			    } else if (forkpid == 0) {
 				    printf("child here %d!\n", getpid());
 				    execvp(arg_array[0], arg_array);
-
 				    return 0;
 			    } else {
 				    printf("parent here %d!\n", getpid());
@@ -71,5 +74,23 @@ int main(int argc, char* argv[]) {
 		    iters++;
     }
 	printf("how did you get here?\n");
+		// printf("Enter command: ");
+		// fflush(stdin);
+		// char line_buffer[LINE_BUFFER_SIZE];
+		// redirstdin("test.txt");
+		// fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
+		// redirstdout("foo.txt");
+		// printf("string you entered (parse later): %s\n", line_buffer);
+		// fgets(line_buffer, LINE_BUFFER_SIZE-1, stdin);
+		// printf("string 2 you entered (parse later): %s\n", line_buffer);
+
+		// redirstdin("test.txt");
+		// char* input = get_input();
+		// redirstdout("foo.txt");
+		// printf("string you entered (parse later): %s\n", input);
+		//
+		// char** test_array;
+
+
 	return 1;
 }
