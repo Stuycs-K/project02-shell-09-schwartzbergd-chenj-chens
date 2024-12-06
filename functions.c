@@ -84,7 +84,7 @@ void redirstdin(char * fileName){
 }
 
 // redir(char** arr): takes a char* array (command array after parsing spaces), checks if a symbol exists and redirects appropriately
-// 
+//
 void redir(char** arr){
   int size = 0;
   int endOfArg = 0;
