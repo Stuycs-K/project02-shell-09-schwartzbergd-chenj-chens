@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 	char* input;
 	char** cmd_array;
 	char** arg_array;
+	char error_string[BUFFER_SIZE];
 
 	while (1) {
 		cwd = getdir(); // needs to be changed for "cd" commands
@@ -31,7 +32,6 @@ int main(int argc, char* argv[]) {
 
     cmd_array = split(input, ";"); // split over the semicolons
 		for (int i = 0; cmd_array[i] != NULL; i++) {
-			printf("%d: '%s'\n", i , cmd_array[i]);
 			// exit check
 			if (strcmp(cmd_array[i], "exit") == 0) {
 				printf("exiting...\n"); // remove in final, keep for testing maybe
@@ -39,6 +39,19 @@ int main(int argc, char* argv[]) {
 			}
 			
 	    arg_array = split(cmd_array[i], " "); // then split over spaces
+			
+			// cd check
+			if (strcmp(arg_array[0], "cd") == 0) {
+				int success = chdir(arg_array[1]);
+				if (success == 0) {
+					
+				} else if (success == -1) {
+					sprintf(error_string, "%s", arg_array[1]);
+					perror(error_string);
+				}
+				
+				continue; // required to make sure cd isn't tried to be execvp()ed
+			}
 
 			int forkpid = fork();
 	    if (forkpid == -1) {
@@ -48,7 +61,6 @@ int main(int argc, char* argv[]) {
 		    execvp(arg_array[0], arg_array);
 					
 				// only reaches here if execvp fails
-				char error_string[BUFFER_SIZE];
 				sprintf(error_string, "%s", arg_array[0]);
 				perror(error_string);
 				
@@ -56,11 +68,9 @@ int main(int argc, char* argv[]) {
 	    } else {
 		    int status;
 		    waitpid(forkpid, &status, 0);
-		    printf("child exited\n");
 	    }
 
 	    free(arg_array);
-	    printf("\n");
 		}
 
 		free(input);
