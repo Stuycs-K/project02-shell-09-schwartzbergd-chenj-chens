@@ -1,1 +1,1 @@
-arg number 1;arg number 2;arg number 3
+echo "hello"

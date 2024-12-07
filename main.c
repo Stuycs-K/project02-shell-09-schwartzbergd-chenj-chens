@@ -30,8 +30,9 @@ int main(int argc, char* argv[]) {
 
 
 	while (1) {
-		cwd = getdir(); // needs to be changed for "cd" commands
+		cwd = getdir();
 		printf("%s$ ", cwd);
+		fflush(stdout);
 
     input = get_input();
 		if (input == NULL) { // doesn't exactly work for some reason, prints command line when doing ./shell < stdin.txt
@@ -41,7 +42,6 @@ int main(int argc, char* argv[]) {
 
     cmd_array = split(input, ";"); // split over the semicolons
 		for (int i = 0; cmd_array[i] != NULL; i++) {
-			// printf("char 1: %c %d\n", cmd_array[i][0] ,(int)cmd_array[i][0]);
 			// exit check
 			if (strcmp(cmd_array[i], "exit") == 0) {
 				printf("exiting...\n"); // remove in final, keep for testing maybe
