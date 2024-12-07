@@ -68,14 +68,8 @@ int main(int argc, char* argv[]) {
 		    perror("Failed to fork");
 		    return 1;
 	    } else if (forkpid == 0) {
-				redir(arg_array);
-				// HANDLE REDIRECTION / PIPING HERE
-				// "< would go after the first command only,
-				// > would go at the end of the command only.
-				// e.g. a < c.txt | b  > d.txt "
-
-		    execvp(arg_array[0], arg_array);
-
+				exec_wrapper(arg_array); 
+				
 				// only reaches here if execvp fails
 				sprintf(error_string, "%s", arg_array[0]);
 				perror(error_string);

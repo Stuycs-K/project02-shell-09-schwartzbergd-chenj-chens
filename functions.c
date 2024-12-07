@@ -48,6 +48,10 @@ int chdir_wrapper(char* newdir) {
 	}
 }
 
+void exec_wrapper(char** arg_array) {
+	execvp(arg_array[0], arg_array);
+}
+
 // splits a string into substrings over delimiters (usually ; or space)
 // - char* string: the string to be split on
 // - char* delimiters: the (possibly multiple) delimiters that will be passed into strsep
