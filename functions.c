@@ -12,6 +12,15 @@
 #define ARRAY_SIZE 16
 #define TEMPFILE ".tempfile"
 
+int arr_len(char** str_arr) {
+	int len = 0;
+	while (str_arr[len] != NULL) {
+		++len;
+	}
+	
+	return len;
+}
+
 // gets the string of the cwd (current working directory)
 // - no parameters
 // returns a string
@@ -49,15 +58,25 @@ void print_dir() {
 
 // change directory manually
 // char** arg_array: to check if there is a cd command
-void cd_check(char** arg_array) {
-  char error_string[BUFFER_SIZE];
+void do_cd(char** arg_array) {
+	if (arr_len(arg_array) != 2) {
+		printf("cd: too many arguments\n"); // shell error, so no errno for this
+		return;
+	}
+	
+	if (arg_array[1] == NULL) {
+		arg_array[1] = getenv("HOME");
+	}
+	
   int success = chdir(arg_array[1]);
-  if (success == 0) {
-      
-  } else if (success == -1) {
-      sprintf(error_string, "%s", arg_array[1]);
-      perror(error_string);
-  }
+  if (success == -1) {
+		char error_string[BUFFER_SIZE];
+    sprintf(error_string, "%s", arg_array[1]);
+    perror(error_string);
+	} else if (success == 0) {
+		
+	}
+	
 }
 
 // split over the command array

@@ -7,7 +7,6 @@
 char * getdir();
 char * shortdir();
 void print_dir();
-void cd_check(char** arg_array);
 char * get_input();
 char ** split(char* string, char* delimiters);
 
@@ -18,7 +17,7 @@ void redirstdout(char * fileName);
 void redirstdin(char * fileName);
 void redir(char** arr);
 int checkforpipe(char ** arr);
-void cd_check(char** arg_array);
+void do_cd(char** arg_array);
 
 
 #endif

@@ -10,21 +10,18 @@
 
 #define EOF_CHAR 0x04
 
+// testing only 
+// intended to print null at the last index
 void printArr(char** arr) {
-	int j = 0;
-	do {
+	for (int j = 0; ; ++j) {
 		printf("arg %d: '%s'\n", j, arr[j]);
-		if (arr[j]==NULL){
+		if (arr[j] == NULL) {
 			break;
 		}
-		j++;
-	} while(1);
+	}
 }
 
 int main(int argc, char* argv[]) {
-	// int backup_stdout = dup(STDOUT_FILENO);
-	// int backup_stdin = dup(STDIN_FILENO);
-	// char* cwd;
 	char* input;
 	char** cmd_array;
 	char** arg_array;
@@ -42,20 +39,13 @@ int main(int argc, char* argv[]) {
 		cmd_array = split(input, ";"); // split over semicolons first
 	  for (int i = 0; cmd_array[i] != NULL; i++) {
 			arg_array = split(cmd_array[i], " ");
-			// printArr(arg_array);
-			if (arg_array[0][0] == EOF_CHAR){
-				printf("Exiting \n");
+			if (arg_array[0][0] == EOF_CHAR || strcmp(arg_array[0], "exit") == 0) {
 				return 0;
 			}
-			if (strcmp(arg_array[0], "exit") == 0) {
-				printf("exiting 2\n");
-				return 0;
-			}
-			
 			
 			if (strcmp(arg_array[0], "cd") == 0) {
-	        cd_check(arg_array);
-	        continue; // required to make sure cd isn't tried to be execvp()ed
+        do_cd(arg_array);
+        continue;
 	    }
 	    
     	int forkpid = fork();
