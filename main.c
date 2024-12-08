@@ -31,8 +31,7 @@ int main(int argc, char* argv[]) {
 		print_dir();
 
 		input = get_input();
-		if (input == NULL) { // from file
-			printf("EOF, exiting\n");
+		if (input == NULL) {
 			return 0;
 		}
 		
@@ -61,19 +60,23 @@ int main(int argc, char* argv[]) {
             return 1;
 					} else if (forkpid2 == 0) { // grandchild process
             grandchild_process(pipeIndex, arg_array);
+						sprintf(error_string, "%s", arg_array[0]);
+				    perror(error_string);
+						return 1;
 					} else {
             child_process(forkpid2, pipeIndex, arg_array);
-        }
-			}
+						sprintf(error_string, "%s", arg_array[0]);
+				    perror(error_string);
+						return 1;
+					}
+				}
 			
-			redir(arg_array);
-			execvp(arg_array[0], arg_array);
-
-	    // only reaches here if execvp fails
-	    sprintf(error_string, "%s", arg_array[0]);
-	    perror(error_string);
-			return 1;
-    
+				redir(arg_array);
+				execvp(arg_array[0], arg_array);
+		    sprintf(error_string, "%s", arg_array[0]);
+		    perror(error_string);
+				return 1;
+		  
 			} else { // main program
 		    int status;
 		    waitpid(forkpid, &status, 0);

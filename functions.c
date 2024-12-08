@@ -8,7 +8,7 @@
 
 #include "functions.h"
 
-#define BUFFER_SIZE 256
+#define STR_BUFFER_SIZE 256
 #define ARRAY_SIZE 16
 #define TEMPFILE ".tempfile"
 
@@ -25,12 +25,10 @@ int arr_len(char** str_arr) {
 // - no parameters
 // returns a string
 char * getdir() {
-  char * cwd;
-	int s = sizeof(char) * BUFFER_SIZE;
-  cwd = (char *)malloc(s);
-//  long l = strlen(getenv("HOME"))
-  if (getcwd(cwd, s)==NULL){
+	char * cwd = (char*) malloc(sizeof(char) * STR_BUFFER_SIZE);
+	if (getcwd(cwd, sizeof(char) * STR_BUFFER_SIZE) == NULL){
     printf("Error: %s\n", strerror(errno));
+		return NULL;
   }
   return cwd;
 }
@@ -40,10 +38,10 @@ char * getdir() {
 // returns shorten directory, a string
 char * shortdir() {
   int leng = strlen(getenv("HOME"));
-  char * shortcwd = (char *)malloc(sizeof(char)*1024);
+	char * shortcwd = (char *)malloc(sizeof(char)*STR_BUFFER_SIZE);
   char * cwd = getdir();
   strcat(shortcwd, "~/");
-  strncpy(shortcwd+2, cwd+leng-1, strlen(cwd));
+	strncpy(shortcwd+2, cwd+leng+1, strlen(cwd));
   shortcwd[strlen(cwd)]='\0';
   return shortcwd;
 }
@@ -70,7 +68,7 @@ void do_cd(char** arg_array) {
 	
   int success = chdir(arg_array[1]);
   if (success == -1) {
-		char error_string[BUFFER_SIZE];
+		char error_string[STR_BUFFER_SIZE];
     sprintf(error_string, "%s", arg_array[1]);
     perror(error_string);
 	} else if (success == 0) {
@@ -112,11 +110,11 @@ void delete_temp(char * file) {
 // - no parameters
 // returns a string with newline removed
 char* get_input() {
-  char* line_buffer = (char*) malloc(BUFFER_SIZE * sizeof(char));
-  if (fgets(line_buffer, BUFFER_SIZE-1, stdin) == NULL) {
+  char* line_buffer = (char*) malloc(STR_BUFFER_SIZE * sizeof(char));
+  if (fgets(line_buffer, STR_BUFFER_SIZE-1, stdin) == NULL) {
     return NULL;
   }
-  line_buffer[BUFFER_SIZE-1] = '\0';
+  line_buffer[STR_BUFFER_SIZE-1] = '\0';
 
   int newline_check = strlen(line_buffer) - 1;
   if (line_buffer[newline_check] == '\n') {
