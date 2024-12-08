@@ -1,0 +1,1 @@
+cat test.txt > foo.txt;ls | wc;cowsay < foo.txt;cd ..;cd project02-shell-09-schwartzbergd-chenj-chens;cowsay < foo.txt | wc > out.txt;cat out.txt;cowsay hello > foo.txt;cat foo.txt

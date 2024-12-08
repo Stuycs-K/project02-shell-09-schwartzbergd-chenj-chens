@@ -10,15 +10,6 @@
 
 #define EOF_CHAR 0x04
 
-// just for testing, no real functionality
-// void printArr(char** arr) {
-// 	int j = 0;
-// 	do {
-// 		printf("arg %d: '%s'\n", j, arr[j]);
-// 		j++;
-// 	} while(arr[j]!=NULL);
-// }
-
 int main(int argc, char* argv[]) {
 	// int backup_stdout = dup(STDOUT_FILENO);
 	// int backup_stdin = dup(STDIN_FILENO);
@@ -41,7 +32,6 @@ int main(int argc, char* argv[]) {
             return 0;
         }
 
-		// cd check
         if (strcmp(arg_array[0], "cd") == 0) {
             cd_check(arg_array);
             continue; // required to make sure cd isn't tried to be execvp()ed
@@ -80,8 +70,6 @@ int main(int argc, char* argv[]) {
 	    }
 	    free(arg_array);
 		free(input);
-  }
-
-	printf("??? You shouldn't be here, probably\n");
+  	}
 	return 1;
 }

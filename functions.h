@@ -21,4 +21,3 @@ void redir(char** arr);
 int checkforpipe(char ** arr);
 
 #endif
-
