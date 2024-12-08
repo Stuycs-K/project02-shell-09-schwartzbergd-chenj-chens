@@ -10,32 +10,20 @@
 
 #define EOF_CHAR 0x04
 
-// just for testing, no real functionality
-void printArr(char** arr) {
-	int j = 0;
-	do {
-		printf("arg %d: '%s'\n", j, arr[j]);
-		j++;
-	} while(arr[j]!=NULL);
-}
-
 int main(int argc, char* argv[]) {
 	// int backup_stdout = dup(STDOUT_FILENO);
 	// int backup_stdin = dup(STDIN_FILENO);
-	char* cwd;
+	// char* cwd;
 	char* input;
 	char** cmd_array;
 	char** arg_array;
 	char error_string[BUFFER_SIZE];
 
-
 	while (1) {
-		cwd = getdir();
-		printf("%s$ ", cwd);
-		fflush(stdout);
+		print_dir();
 
     input = get_input();
-		if (input == NULL) { // doesn't exactly work for some reason, prints command line when doing ./shell < stdin.txt
+		if (input == NULL) { //from file
 			printf("EOF, exiting\n");
 			return 0;
 		}
@@ -69,10 +57,6 @@ int main(int argc, char* argv[]) {
 		    perror("Failed to fork");
 		    return 1;
 	    } else if (forkpid == 0) {
-<<<<<<< HEAD
-				exec_wrapper(arg_array); 
-				
-=======
 				int pipeIndex = checkforpipe(arg_array);
 				if (pipeIndex !=-1){ // if pipe exists
 					forkpid2 = fork(); // then fork
@@ -101,23 +85,38 @@ int main(int argc, char* argv[]) {
 
 		    execvp(arg_array[0], arg_array);
 
->>>>>>> fb9a3111e54a22aa8097a89a1301198f0e4bea21
 				// only reaches here if execvp fails
 				sprintf(error_string, "%s", arg_array[0]);
 				perror(error_string);
 
 				return 1;
+
+        int pipeIndex = checkforpipe(arg_array);
+        if (pipeIndex !=-1){ // if pipe exists
+            forkpid2 = fork(); // then fork
+            if (forkpid2 == -1){
+                perror("Failed to fork");
+                return 1;
+            } else if (forkpid2 == 0){ // grandchild process
+                grandchild_process(pipeIndex, arg_array);
+            } else{ // child process
+                child_process(forkpid2, pipeIndex, arg_array);
+            }
+        }
+        redir(arg_array);
+		execvp(arg_array[0], arg_array);
+
+        // only reaches here if execvp fails
+        sprintf(error_string, "%s", arg_array[0]);
+        perror(error_string);
+		return 1;
+        
 	    } else {
 		    int status;
 		    waitpid(forkpid, &status, 0);
 	    }
-
 	    free(arg_array);
-		}
-
 		free(input);
-  }
-
-	printf("??? You shouldn't be here, probably\n");
+  	}
 	return 1;
 }

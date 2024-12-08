@@ -1,9 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/wait.h>
+
+#include "functions.h"
 
 #define BUFFER_SIZE 256
 #define ARRAY_SIZE 16
@@ -22,6 +25,78 @@ char * getdir() {
   return cwd;
 }
 
+// shortens abs. path by replacing home path with ~
+// - no parameters
+// returns shorten directory, a string
+char * shortdir() {
+  int leng = strlen(getenv("HOME"));
+  char * shortcwd = (char *)malloc(sizeof(char)*1024);
+  char * cwd = getdir();
+  strcat(shortcwd, "~/");
+  strncpy(shortcwd+2, cwd+leng-1, strlen(cwd));
+  shortcwd[strlen(cwd)]='\0';
+  return shortcwd;
+}
+
+// prints directory
+// - no parameters
+void print_dir() {
+  	char* cwd = shortdir(); // needs to be changed for "cd" commands
+		printf("%s$ ", cwd);
+		fflush(stdout);
+}
+
+// change directory manually
+// char** arg_array: to check if there is a cd command
+void cd_check(char** arg_array) {
+  char error_string[BUFFER_SIZE];
+  int success = chdir(arg_array[1]);
+  if (success == 0) {
+      
+  } else if (success == -1) {
+      sprintf(error_string, "%s", arg_array[1]);
+      perror(error_string);
+  }
+}
+
+// split over the command array
+// char* input: from get_input
+// cmd** cmd_array: buffer to store input from user
+// returns char** of split commands
+char** get_command(char* input, char** cmd_array) {
+  cmd_array = split(input, ";"); // split over the semicolons
+  for (int i = 0; cmd_array[i] != NULL; i++) {
+    if (strcmp(cmd_array[i], "exit") == 0) {
+      return 0;
+    }
+    return split(cmd_array[i], " "); // then split over spaces
+  }
+}
+
+void child_process(int forkpid2, int pipeIndex, char** arg_array) {
+  int status;
+  waitpid(forkpid2, &status, 0);
+  redirstdin("temp.txt");
+  arg_array[pipeIndex] = NULL;
+  redir(&arg_array[pipeIndex+1]);
+  execvp(arg_array[pipeIndex+1], &arg_array[pipeIndex+1]);
+}
+
+void grandchild_process(int pipeIndex, char** arg_array) {
+  arg_array[pipeIndex] = NULL; // run first command
+  redirstdout("temp.txt");
+  redir(arg_array);
+  execvp(arg_array[0], arg_array);
+}
+
+void delete_temp(char * file) {
+  if (strcmp(file, "temp.txt")==0) {
+    if (remove("temp.txt")) {
+      perror("Error deleting temp file.");
+    }
+  }
+}
+
 // waits for input from stdin using fgets
 // - no parameters
 // returns a string with newline removed
@@ -38,18 +113,6 @@ char* get_input() {
   }
 
   return line_buffer;
-}
-
-int chdir_wrapper(char* newdir) {
-	if (newdir == NULL) {
-		return chdir(getenv("HOME"));
-	} else {
-		return chdir(newdir);
-	}
-}
-
-void exec_wrapper(char** arg_array) {
-	execvp(arg_array[0], arg_array);
 }
 
 // splits a string into substrings over delimiters (usually ; or space)
@@ -93,6 +156,7 @@ void redirstdin(char * fileName){
 	}
   dup2(fd1, FILENO);
   close(fd1);
+  delete_temp(fileName);
 }
 
 // redir(char** arr): takes a char* array (command array after parsing spaces), checks if a symbol exists and redirects appropriately
