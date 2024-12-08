@@ -37,12 +37,16 @@ char * getdir() {
 // - no parameters
 // returns shorten directory, a string
 char * shortdir() {
-  int leng = strlen(getenv("HOME"));
-	char * shortcwd = (char *)malloc(sizeof(char)*STR_BUFFER_SIZE);
-  char * cwd = getdir();
+  int home_length = strlen(getenv("HOME"));
+	char* cwd = getdir();
+	if (strlen(cwd) < home_length) {
+		return cwd;
+	}
+	
+	char * shortcwd = (char*) malloc(sizeof(char) * STR_BUFFER_SIZE);
   strcat(shortcwd, "~/");
-	strncpy(shortcwd+2, cwd+leng+1, strlen(cwd));
-  shortcwd[strlen(cwd)]='\0';
+	strncpy(shortcwd+2, cwd+home_length+1, strlen(cwd));
+	shortcwd[strlen(shortcwd)] = '\0';
   return shortcwd;
 }
 
@@ -57,12 +61,13 @@ void print_dir() {
 // change directory manually
 // char** arg_array: to check if there is a cd command
 void do_cd(char** arg_array) {
-	if (arr_len(arg_array) != 2) {
-		printf("cd: too many arguments\n"); // shell error, so no errno for this
+	int arr_len_ = arr_len(arg_array);
+	if (arr_len_ > 2) {
+		printf("cd: too many arguments(%d)\n", arr_len_); // shell error, so no errno for this
 		return;
 	}
 	
-	if (arg_array[1] == NULL) {
+	if (arg_array[1] == NULL || strcmp(arg_array[1], "~") == 0) {
 		arg_array[1] = getenv("HOME");
 	}
 	
