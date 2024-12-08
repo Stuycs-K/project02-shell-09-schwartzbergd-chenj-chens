@@ -1,0 +1,9 @@
+README.md
+c.txt
+functions.c
+functions.h
+functions.o
+main.c
+main.o
+makefile
+shell
