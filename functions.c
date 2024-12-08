@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -11,15 +12,6 @@
 #define STR_BUFFER_SIZE 256
 #define ARRAY_SIZE 16
 #define TEMPFILE ".tempfile"
-
-int arr_len(char** str_arr) {
-	int len = 0;
-	while (str_arr[len] != NULL) {
-		++len;
-	}
-	
-	return len;
-}
 
 // gets the string of the cwd (current working directory)
 // - no parameters
@@ -36,7 +28,7 @@ char * getdir() {
 // shortens abs. path by replacing home path with ~
 // - no parameters
 // returns shorten directory, a string
-char * shortdir() {
+char * get_short_cwd() {
   int home_length = strlen(getenv("HOME"));
 	char* cwd = getdir();
 	if (strlen(cwd) < home_length) {
@@ -52,26 +44,37 @@ char * shortdir() {
 
 // prints directory
 // - no parameters
-void print_dir() {
-  	char* cwd = shortdir(); // needs to be changed for "cd" commands
-		printf("%s$ ", cwd);
-		fflush(stdout);
+void print_dir(char* cwd) {
+	printf("%s$ ", cwd);
+	fflush(stdout);
+}
+
+// used purely for cd stuff
+int arr_len(char** str_arr) {
+	int len = 0;
+	while (str_arr[len] != NULL) {
+		++len;
+	}
+	
+	return len;
 }
 
 // change directory manually
 // char** arg_array: to check if there is a cd command
 void do_cd(char** arg_array) {
-	int arr_len_ = arr_len(arg_array);
-	if (arr_len_ > 2) {
-		printf("cd: too many arguments(%d)\n", arr_len_); // shell error, so no errno for this
-		return;
-	}
-	
+	char* dir_to_cd_to;
 	if (arg_array[1] == NULL || strcmp(arg_array[1], "~") == 0) {
-		arg_array[1] = getenv("HOME");
+		dir_to_cd_to = getenv("HOME");
+	} else {
+		if (arr_len(arg_array) > 2) {
+			printf("cd: too many arguments\n"); // shell error, so no errno for this
+			return;
+		}
+		
+		dir_to_cd_to = arg_array[1];
 	}
-	
-  int success = chdir(arg_array[1]);
+
+	int success = chdir(dir_to_cd_to);
   if (success == -1) {
 		char error_string[STR_BUFFER_SIZE];
     sprintf(error_string, "%s", arg_array[1]);
@@ -79,7 +82,6 @@ void do_cd(char** arg_array) {
 	} else if (success == 0) {
 		
 	}
-	
 }
 
 // split over the command array

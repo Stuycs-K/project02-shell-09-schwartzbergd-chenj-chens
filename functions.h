@@ -5,8 +5,8 @@
 #define ARRAY_SIZE 16
 
 char * getdir();
-char * shortdir();
-void print_dir();
+char * get_short_cwd();
+void print_dir(char* cwd);
 char * get_input();
 char ** split(char* string, char* delimiters);
 

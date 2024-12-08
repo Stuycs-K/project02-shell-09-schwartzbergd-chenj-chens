@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	char error_string[BUFFER_SIZE];
 
 	while (1) {
-		print_dir();
+		print_dir(get_short_cwd());
 
 		input = get_input();
 		if (input == NULL) {
