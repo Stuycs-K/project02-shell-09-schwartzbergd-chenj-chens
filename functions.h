@@ -11,6 +11,6 @@ char ** split(char* string, char* delimiters);
 void redirstdout(char * fileName);
 void redirstdin(char * fileName);
 void redir(char** arr);
-void piper();
+int checkforpipe(char ** arr);
 
 #endif

@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 	while (1) {
 		cwd = getdir(); // needs to be changed for "cd" commands
 		printf("%s$ ", cwd);
+		fflush(stdout);
 
     input = get_input();
 		if (input == NULL) { // doesn't exactly work for some reason, prints command line when doing ./shell < stdin.txt
@@ -64,10 +65,31 @@ int main(int argc, char* argv[]) {
 			}
 
 			int forkpid = fork();
+			int forkpid2;
 	    if (forkpid == -1) {
 		    perror("Failed to fork");
 		    return 1;
 	    } else if (forkpid == 0) {
+				int pipeIndex = checkforpipe(arg_array);
+				if (pipeIndex !=-1){ // if pipe exists
+					forkpid2 = fork(); // then fork
+					if (forkpid2 == -1){
+						perror("Failed to fork");
+				    return 1;
+					} else if (forkpid2 == 0){ // grandchild process
+							arg_array[pipeIndex] = NULL; // run first command
+							redirstdout("temp.txt");
+							redir(arg_array);
+							execvp(arg_array[0], arg_array);
+					} else{ // child process
+						int status;
+						waitpid(forkpid2, &status, 0);
+						redirstdin("temp.txt");
+						arg_array[pipeIndex] = NULL;
+						redir(&arg_array[pipeIndex+1]);
+						execvp(arg_array[pipeIndex+1], &arg_array[pipeIndex+1]);
+					}
+				}
 				redir(arg_array);
 				// HANDLE REDIRECTION / PIPING HERE
 				// "< would go after the first command only,
