@@ -15,6 +15,6 @@ void exec_wrapper(char** arg_array);
 void redirstdout(char * fileName);
 void redirstdin(char * fileName);
 void redir(char** arr);
-void piper();
+int checkforpipe(char ** arr);
 
 #endif

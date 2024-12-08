@@ -96,7 +96,7 @@ void redirstdin(char * fileName){
 }
 
 // redir(char** arr): takes a char* array (command array after parsing spaces), checks if a symbol exists and redirects appropriately
-// 
+//
 void redir(char** arr){
   int size = 0;
   int endOfArg = 0;
@@ -112,18 +112,16 @@ void redir(char** arr){
       endOfArg = size-2;
     }
     arr[endOfArg] = NULL;
-    execvp(arr[0], arr);
+    // execvp(arr[0], arr); // not needed?
   }
 }
 
-// pipe(): redirects stdout to temp and redirects stdin to temp, (haven't done) removes temp file after
-void piper(){
-//  int backup_stdout = dup(STDOUT_FILENO);
-  redirstdout("temp.txt");
-//  dup2(backup_stdout, STDOUT_FILENO); // set stdout entry to original
-  redirstdin("temp.txt");
-	if (remove("temp.txt")<0) {
-		perror("Failed to remove temp.txt");
-		return;
-	}
+int checkforpipe(char ** arr){
+  int size = 0;
+  int pipeIndex = -1;
+  while (arr[size]!=NULL) {
+    if (!strcmp(arr[size], "|")) {pipeIndex = size;}
+    size++;
+  }
+  return pipeIndex;
 }
