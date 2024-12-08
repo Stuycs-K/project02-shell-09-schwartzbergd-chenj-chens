@@ -10,6 +10,7 @@
 
 #define BUFFER_SIZE 256
 #define ARRAY_SIZE 16
+#define TEMPFILE ".tempfile"
 
 // gets the string of the cwd (current working directory)
 // - no parameters
@@ -63,20 +64,11 @@ void cd_check(char** arg_array) {
 // char* input: from get_input
 // cmd** cmd_array: buffer to store input from user
 // returns char** of split commands
-char** get_command(char* input, char** cmd_array) {
-  cmd_array = split(input, ";"); // split over the semicolons
-  for (int i = 0; cmd_array[i] != NULL; i++) {
-    if (strcmp(cmd_array[i], "exit") == 0) {
-      return 0;
-    }
-    return split(cmd_array[i], " "); // then split over spaces
-  }
-}
 
 void child_process(int forkpid2, int pipeIndex, char** arg_array) {
   int status;
   waitpid(forkpid2, &status, 0);
-  redirstdin("temp.txt");
+  redirstdin(TEMPFILE);
   arg_array[pipeIndex] = NULL;
   redir(&arg_array[pipeIndex+1]);
   execvp(arg_array[pipeIndex+1], &arg_array[pipeIndex+1]);
@@ -84,14 +76,14 @@ void child_process(int forkpid2, int pipeIndex, char** arg_array) {
 
 void grandchild_process(int pipeIndex, char** arg_array) {
   arg_array[pipeIndex] = NULL; // run first command
-  redirstdout("temp.txt");
+  redirstdout(TEMPFILE);
   redir(arg_array);
   execvp(arg_array[0], arg_array);
 }
 
 void delete_temp(char * file) {
-  if (strcmp(file, "temp.txt")==0) {
-    if (remove("temp.txt")) {
+  if (strcmp(file, TEMPFILE)==0) {
+    if (remove(TEMPFILE)) {
       perror("Error deleting temp file.");
     }
   }
@@ -121,15 +113,16 @@ char* get_input() {
 // returns a char** array with max size ARRAY_SIZE, containing the split strings without the delimiters;
 // the index after the last string will be NULL
 char** split(char* string, char* delimiters) {
-	char** arg_array = (char**) malloc(ARRAY_SIZE * sizeof(char*));
+	char** array = (char**) malloc(ARRAY_SIZE * sizeof(char*));
 	int i = 0;
 	for (char* token; i < ARRAY_SIZE && (token = strsep(&string, delimiters)) != NULL; i++) {
-    arg_array[i] = token;
+		array[i] = token;
   }
-  arg_array[i] = NULL;
-	arg_array[ARRAY_SIZE-1] = NULL; // safety NULL
+	
+	array[i] = NULL;
+	array[ARRAY_SIZE-1] = NULL; // safety NULL
 
-	return arg_array;
+	return array;
 }
 
 // redirstdout(char * fileName): takes file name as argument, redirects stdout to that file using dup2
