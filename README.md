@@ -2,7 +2,7 @@
 
 # Systems Project2 - MyShell
 
-## (funny pun here): David Schwartzberg, Jialan Chen, Stacey Chen
+## Sally Sells CShells by the Seashore: David Schwartzberg, Jialan Chen, Stacey Chen
 
 ### Features
 
@@ -15,10 +15,6 @@
 
 #### Extra Features
 - Home directory shortened to "~" when possible
-- ADD EXTRA STUFF HERE OR DELETE BEFORE FINAL 
-
-### Unfinished Features
-- something here probably
 
 ### Bugs
 - NOTHING FOUND YET

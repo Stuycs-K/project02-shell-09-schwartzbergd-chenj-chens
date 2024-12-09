@@ -34,7 +34,7 @@ char * get_short_cwd() {
 	if (strlen(cwd) < home_length) {
 		return cwd;
 	}
-	
+
 	char * shortcwd = (char*) malloc(sizeof(char) * STR_BUFFER_SIZE);
   strcat(shortcwd, "~/");
 	strncpy(shortcwd+2, cwd+home_length+1, strlen(cwd));
@@ -55,7 +55,7 @@ int arr_len(char** str_arr) {
 	while (str_arr[len] != NULL) {
 		++len;
 	}
-	
+
 	return len;
 }
 
@@ -70,7 +70,7 @@ void do_cd(char** arg_array) {
 			printf("cd: too many arguments\n"); // shell error, so no errno for this
 			return;
 		}
-		
+
 		dir_to_cd_to = arg_array[1];
 	}
 
@@ -80,15 +80,14 @@ void do_cd(char** arg_array) {
     sprintf(error_string, "%s", arg_array[1]);
     perror(error_string);
 	} else if (success == 0) {
-		
+
 	}
 }
 
-// split over the command array
-// char* input: from get_input
-// cmd** cmd_array: buffer to store input from user
-// returns char** of split commands
-
+// for piping- executes the command after the pipe after the grandchild process finishes, taking the temporary file as the input
+// int forkpid2: the forkpid of the current process
+// int pipeIndex: the index of the pipe symbol in the argument array
+// char** arg_array: the array for the argument after being split by spaces
 void child_process(int forkpid2, int pipeIndex, char** arg_array) {
   int status;
   waitpid(forkpid2, &status, 0);
@@ -98,6 +97,9 @@ void child_process(int forkpid2, int pipeIndex, char** arg_array) {
   execvp(arg_array[pipeIndex+1], &arg_array[pipeIndex+1]);
 }
 
+// for piping- executes the command before the pipe by making arg_array[pipeIndex] null and redirecting this to a temporary file
+// int pipeIndex: the index of the pipe symbol in the argument array
+// char** arg_array: the array for the argument after being split by spaces
 void grandchild_process(int pipeIndex, char** arg_array) {
   arg_array[pipeIndex] = NULL; // run first command
   redirstdout(TEMPFILE);
@@ -105,6 +107,8 @@ void grandchild_process(int pipeIndex, char** arg_array) {
   execvp(arg_array[0], arg_array);
 }
 
+// deletes the temporary file
+// char * file: name of temporary file
 void delete_temp(char * file) {
   if (strcmp(file, TEMPFILE)==0) {
     if (remove(TEMPFILE)) {
@@ -142,7 +146,7 @@ char** split(char* string, char* delimiters) {
 	for (char* token; i < ARRAY_SIZE && (token = strsep(&string, delimiters)) != NULL; i++) {
 		array[i] = token;
   }
-	
+
 	array[i] = NULL;
 	array[ARRAY_SIZE-1] = NULL; // safety NULL
 
@@ -150,6 +154,7 @@ char** split(char* string, char* delimiters) {
 }
 
 // redirstdout(char * fileName): takes file name as argument, redirects stdout to that file using dup2
+// char* filename: the name of the file to redirect stdout to
 void redirstdout(char * fileName) {
   fflush(stdout);
   int fd1 = open(fileName, O_WRONLY|O_TRUNC|O_CREAT, 0644);
@@ -163,6 +168,7 @@ void redirstdout(char * fileName) {
 }
 
 // redirstdin(char * filename): takes file name as argument, redirects stdin to that file using dup2
+// char* filename: the name of the file to redirect stdin to
 void redirstdin(char * fileName){
   fflush(stdin);
   int fd1 = open(fileName, O_RDONLY);
@@ -176,8 +182,8 @@ void redirstdin(char * fileName){
   delete_temp(fileName);
 }
 
-// redir(char** arr): takes a char* array (command array after parsing spaces), checks if a symbol exists and redirects appropriately
-//
+// redir(char** arr): takes a char* array (), checks if a > or < symbol exists and redirects appropriately
+// char ** arr: the argument array (command array after parsing spaces)
 void redir(char** arr){
   int size = 0;
   int endOfArg = 0;
@@ -197,6 +203,8 @@ void redir(char** arr){
   }
 }
 
+// checks if a pipe exists
+// char ** arr: the argument array (command array after parsing spaces)
 int checkforpipe(char ** arr){
   int size = 0;
   int pipeIndex = -1;
