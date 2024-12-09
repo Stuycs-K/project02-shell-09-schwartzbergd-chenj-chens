@@ -17,19 +17,32 @@
 - Home directory shortened to "~" when possible
 
 ### Bugs
-- NOTHING FOUND YET
+- No known bugs
+
+### Other Notes
+- When cwd is "before" home, the cwd will not shorten to ~.
+- Do not include any trailing spaces for commands as they might fail.
+- Semicolons must be exactly in between commands with no spaces (e.g. "echo hello;ls")
 
 ### Functions
-- char* getdir()
-- char* get_input()
-- char** split(char* string, char* delimiters)
 
-- int chdir_wrapper(char* newdir)
-- void exec_wrapper(char** arg_array)
+#### input/output
+- char* getdir();
+- char* get_short_cwd();
+- void print_dir(char* cwd);
+- char* get_input();
+- char** split(char* string, char* delimiters);
 
-- void redirstdout(char* fileName)
-- void redirstdin(char* fileName)
-- void redir(char** arr)
-- int checkforpipe(char** arr)
+#### execvp() and fork() wrappers
+- void child_process(int forkpid2, int pipeIndex, char** arg_array);
+- void grandchild_process(int pipeIndex, char** arg_array);
 
-- other functions here
+#### redirection
+- void redir(char** arr);
+- void redirstdin(char* fileName);
+- void redirstdout(char* fileName);
+- int checkforpipe(char** arr);
+- void delete_temp(char* file);
+
+#### miscellaneous
+- void do_cd(char** arg_array);
